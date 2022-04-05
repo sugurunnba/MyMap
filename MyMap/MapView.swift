@@ -11,6 +11,10 @@ import MapKit
 struct MapView: UIViewRepresentable {
 //    検索キーワード
     let searchKey: String
+    
+//    マップ種類
+    let mapType: MKMapType
+    
 //    表示するViewを作成するときに実行
     func makeUIView(context: Context) -> MKMapView{
 //        MKMapViewのインスタンス生成
@@ -22,11 +26,15 @@ struct MapView: UIViewRepresentable {
 //        入力された文字をデバッグエリアに表示
         print(searchKey)
         
+//        マップ種類の設定
+        uiView.mapType = mapType
+        
+//        CLGeocoderインスタンスを取得
         let geocoder = CLGeocoder()
         
-        geocoder.geocodeAddressString(
-            searchKey,
-            completionHandler: { (placemarks,error) in
+//        geocoderAddressStringで入力されたキーワードで位置情報の取得が完了したとき、completionHandler : {}のクロージャが実行される
+        geocoder.geocodeAddressString(searchKey,completionHandler: {
+            (placemarks,error) in
 //            リクエストの結果が存在し、1件目の情報から位置情報を取り出す
             if let unwrapPlacemarks = placemarks ,
                let firstPlacemark = unwrapPlacemarks.first ,
@@ -64,6 +72,6 @@ struct MapView: UIViewRepresentable {
 // シミュレータでアプリを起動したときには実行されない
 struct MapView_Previews: PreviewProvider {
     static var previews: some View {
-        MapView(searchKey: "東京タワー")
+        MapView(searchKey: "東京タワー", mapType: .standard)
     }
 }
